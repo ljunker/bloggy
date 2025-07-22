@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head><title>Mein Blog</title></head>
+  <body>
+    <h1>Mein Blog</h1>
+    <ul>
+      {% for post in posts %}
+        <li>
+          <a href="/{{ post.slug }}">{{ post.title }}</a><br>
+          <small>{{ post.datetime.strftime("%Y-%m-%d %H:%M") }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
