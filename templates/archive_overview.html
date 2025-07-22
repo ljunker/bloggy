@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head><title>Archiv</title></head>
+  <body>
+    <h1>Archiv</h1>
+    <a href="/">← Startseite</a>
+    <ul>
+      {% for (year, month), posts in grouped %}
+        <li>
+          <a href="/{{ year }}/{{ '%02d' % month }}">
+            {{ year }} / {{ "%02d" % month }} ({{ posts|length }} Beiträge)
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

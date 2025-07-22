@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-  <head><title>Mein Blog</title></head>
+  <head><title>Archiv {{ year }}/{{ "%02d" % month }}</title></head>
   <body>
-    <h1>Neueste Beiträge</h1>
-    <p><a href="/archive">Alle Monate im Archiv →</a></p>
+    <h1>Archiv: {{ year }}/{{ "%02d" % month }}</h1>
+    <a href="/">← Startseite</a>
 
     {% for post in posts %}
-    <hr>
+      <hr>
       <article>
         <small>{{ post.datetime.strftime("%Y-%m-%d %H:%M") }}</small>
         <div>{{ post.content | safe }}</div>
@@ -14,7 +14,5 @@
         <hr>
       </article>
     {% endfor %}
-
-    <p><a href="/{{ posts[-1].year }}/{{ '%02d' % posts[-1].month }}">Ältere Beiträge →</a></p>
   </body>
 </html>
