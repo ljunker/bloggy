@@ -70,4 +70,4 @@ def archive_overview():
     return render_template("archive_overview.html", grouped=sorted_groups)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=9000)
+    app.run(host="0.0.0.0", port=8000)
