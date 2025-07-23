@@ -1,14 +1,10 @@
 FROM python:3.11-slim
 
 WORKDIR /app
-
-# System update & install deps
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-# Copy app
-COPY . .
+COPY src/ src/
+COPY src/bloggy/templates/ templates/
 
-# Expose port & run
-EXPOSE 5000
-CMD ["python", "app.py"]
+CMD ["python", "-m", "src.bloggy.app"]

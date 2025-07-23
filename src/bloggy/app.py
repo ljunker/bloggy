@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from flask import Flask, render_template, abort
 import os
 import markdown2
@@ -6,12 +8,13 @@ from datetime import datetime
 from collections import defaultdict
 
 app = Flask(__name__)
-POST_DIR = "posts"
+POST_DIR = Path(__file__).parent / "posts"
+app.config['POST_DIR'] = POST_DIR
 MAX_RECENT = 20
 
 def parse_post(filename):
     slug = filename[:-3]
-    path = os.path.join(POST_DIR, filename)
+    path = os.path.join(app.config['POST_DIR'], filename)
     with open(path, "r") as f:
         post = frontmatter.load(f)
 
@@ -30,7 +33,7 @@ def parse_post(filename):
 
 def get_all_posts():
     posts = []
-    for filename in os.listdir(POST_DIR):
+    for filename in os.listdir(app.config['POST_DIR']):
         if filename.endswith(".md"):
             posts.append(parse_post(filename))
     posts.sort(key=lambda p: p['datetime'], reverse=True)
@@ -52,7 +55,7 @@ def archive(year, month):
 @app.route("/<slug>")
 def post(slug):
     filename = f"{slug}.md"
-    path = os.path.join(POST_DIR, filename)
+    path = os.path.join(app.config['POST_DIR'], filename)
     if not os.path.exists(path):
         abort(404)
     post = parse_post(filename)
