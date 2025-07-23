@@ -11,6 +11,7 @@ dependencies = [
 [project.optional-dependencies]
 test = [
     "pytest",
+    "pytest-json-report",
     "pytest-mock",
     "coverage"
 ]
