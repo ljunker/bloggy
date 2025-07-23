@@ -7,3 +7,4 @@ __pycache__/
 htmlcov/
 /src/bloggy.egg-info/
 /coverage.json
+/.report.json
