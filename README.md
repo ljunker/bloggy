@@ -1,6 +1,7 @@
 # Bloggy
 
 [![cov](https://ljunker.github.io/bloggy/badges/coverage.svg)](https://github.com/ljunker/bloggy/actions)
+[![tests](https://ljunker.github.io/bloggy/badges/tests.svg)](https://github.com/ljunker/bloggy/actions)
 
 Ein einfacher Flask-Blog, der Markdown-Dateien als Blogposts rendert.
 
