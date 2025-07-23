@@ -30,41 +30,6 @@ jobs:
         chmod +x runtests.sh
         ./runtests.sh
 
-    - name: Generate coverage badge
-      run: |
-        pip install genbadge[coverage]
-        python -c "
-        import json
-        with open('coverage.json') as f:
-            data = json.load(f)
-            coverage = data['totals']['percent_covered_display']
-        with open('coverage_badge.svg', 'wb') as f:
-            from genbadge import Badge
-            badge = Badge('coverage', f'{coverage}%', 
-                         color='brightgreen' if float(coverage) >= 90 
-                         else 'yellow' if float(coverage) >= 70 
-                         else 'red')
-            f.write(badge.svg())
-        "
-
-    - name: Update README with coverage badge
-      run: |
-        # Sichern der alten README
-        cp README.md README.md.bak
-        
-        # Prüfen, ob bereits ein Coverage Badge existiert
-        if grep -q "!\[Coverage\]" README.md; then
-          # Ersetze existierendes Badge
-          sed -i "s|!\[Coverage\]([^)]*)|![Coverage](./coverage_badge.svg)|" README.md
-        else
-          # Füge Badge am Anfang der Datei ein (nach dem ersten Titel)
-          sed -i "0,/^# /!b;//a\\\\n![Coverage](./coverage_badge.svg)\\n" README.md
-        fi
-
-    - name: Commit and push changes
-      run: |
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git add coverage_badge.svg README.md
-        git commit -m "Update coverage badge" || echo "No changes to commit"
-        git push
+    - name: Update Coverage Badge
+      if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+      uses: we-cli/coverage-badge-action@main
