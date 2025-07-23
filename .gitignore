@@ -6,5 +6,3 @@ __pycache__/
 .coverage
 htmlcov/
 /src/bloggy.egg-info/
-/coverage.json
-/.report.json
