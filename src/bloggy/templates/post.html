@@ -1,9 +1,15 @@
-<!DOCTYPE html>
-<html>
-  <head><title>{{ slug }}</title></head>
-  <body>
-    <a href="/">Zurück</a>
-    <hr>
-    {{ post.content | safe }}
-  </body>
-</html>
+
+{% extends "base.html" %}
+
+{% block title %}{{ slug }} - Mein Blog{% endblock %}
+
+{% block content %}
+    <nav>
+        <a href="/">Zur Startseite</a>
+        <a href="/archive">Archiv</a>
+    </nav>
+
+    <article>
+        <div class="post-content">{{ post.content | safe }}</div>
+    </article>
+{% endblock %}

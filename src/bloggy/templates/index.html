@@ -1,20 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head><title>Mein Blog</title></head>
-  <body>
-    <h1>Neueste Beiträge</h1>
-    <p><a href="/archive">Alle Monate im Archiv →</a></p>
+{% extends "base.html" %}
+
+{% block content %}
+    <nav>
+        <a href="/archive">Archiv durchsuchen</a>
+    </nav>
 
     {% for post in posts %}
-    <hr>
-      <article>
-        <small>{{ post.datetime.strftime("%Y-%m-%d %H:%M") }}</small>
-        <div>{{ post.content | safe }}</div>
-        <p><a href="/{{ post.slug }}">permalink</a></p>
-        <hr>
-      </article>
+        <article>
+            <div class="post-meta">{{ post.datetime.strftime("%d.%m.%Y um %H:%M") }}</div>
+            <div class="post-content">{{ post.content | safe }}</div>
+            <div class="permalink">
+                <a href="/{{ post.slug }}">Direktlink zu diesem Beitrag</a>
+            </div>
+        </article>
     {% endfor %}
 
-    <p><a href="/{{ posts[-1].year }}/{{ '%02d' % posts[-1].month }}">Ältere Beiträge →</a></p>
-  </body>
-</html>
+    {% if posts %}
+        <div class="archive-nav">
+            <a href="/{{ posts[-1].year }}/{{ '%02d' % posts[-1].month }}">Ältere Beiträge</a>
+        </div>
+    {% endif %}
+{% endblock %}

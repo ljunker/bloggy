@@ -1,18 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head><title>Archiv {{ year }}/{{ "%02d" % month }}</title></head>
-  <body>
-    <h1>Archiv: {{ year }}/{{ "%02d" % month }}</h1>
-    <a href="/">← Startseite</a>
+{% extends "base.html" %}
+
+{% block title %}Archiv {{ year }}/{{ "%02d" % month }} - Mein Blog{% endblock %}
+
+{% block header_title %}Archiv{% endblock %}
+{% block header_subtitle %}<p>{{ year }}/{{ "%02d" % month }}</p>{% endblock %}
+
+{% block content %}
+    <nav>
+        <a href="/">Zur Startseite</a>
+        <a href="/archive">Archiv-Übersicht</a>
+    </nav>
 
     {% for post in posts %}
-      <hr>
-      <article>
-        <small>{{ post.datetime.strftime("%Y-%m-%d %H:%M") }}</small>
-        <div>{{ post.content | safe }}</div>
-        <p><a href="/{{ post.slug }}">permalink</a></p>
-        <hr>
-      </article>
+        <article>
+            <div class="post-meta">{{ post.datetime.strftime("%d.%m.%Y um %H:%M") }}</div>
+            <div class="post-content">{{ post.content | safe }}</div>
+            <div class="permalink">
+                <a href="/{{ post.slug }}">Direktlink zu diesem Beitrag</a>
+            </div>
+        </article>
     {% endfor %}
-  </body>
-</html>
+{% endblock %}
