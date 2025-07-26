@@ -8,3 +8,4 @@ services:
     volumes:
       - ./posts:/app/posts:ro
       - ./templates:/app/templates:ro
+    restart: unless-stopped
