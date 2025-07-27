@@ -8,6 +8,6 @@ services:
     volumes:
       - ./posts:/app/posts
       - ./templates:/app/templates:ro
-    environment:
-      - API_KEY=your_api_key_here
+    env_file:
+      - .env
     restart: unless-stopped
