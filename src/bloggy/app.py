@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 
 from flask.cli import load_dotenv
+from pytz import timezone
 
 app = Flask(__name__)
 POST_DIR = os.getenv("POST_DIR")
@@ -15,6 +16,7 @@ app.config['POST_DIR'] = POST_DIR
 load_dotenv()
 app.config['API_KEY'] = os.getenv('API_KEY')
 MAX_RECENT = 20
+berlin_tz = timezone('Europe/Berlin')
 
 
 def parse_post(filename):
@@ -126,7 +128,7 @@ def new_post():
 
     title = data['title']
     content = data['content']
-    now = datetime.now()
+    now = datetime.now(berlin_tz)
     filename = f"{now.year}/{now.month}/{now.strftime('%Y-%m-%d')}-{title.replace(' ', '-').lower()}.md"
     path = os.path.join(app.config['POST_DIR'], filename)
 
