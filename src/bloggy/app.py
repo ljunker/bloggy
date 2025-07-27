@@ -4,7 +4,7 @@ from flask import Flask, render_template, abort
 import os
 import markdown2
 import frontmatter
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import defaultdict
 
 app = Flask(__name__)
@@ -12,8 +12,14 @@ POST_DIR = Path(__file__).parent / "posts"
 app.config['POST_DIR'] = POST_DIR
 MAX_RECENT = 20
 
+
 def parse_post(filename):
-    slug = filename[:-3]
+    post_dir_str = str(app.config['POST_DIR'])
+    if filename.startswith(post_dir_str):
+        relative_path = filename[len(post_dir_str):].lstrip(os.sep)
+        slug = relative_path[:-3] if relative_path.endswith('.md') else relative_path
+    else:
+        slug = filename[:-3]
     path = os.path.join(app.config['POST_DIR'], filename)
     with open(path, "r") as f:
         post = frontmatter.load(f)
@@ -31,35 +37,55 @@ def parse_post(filename):
         "content": markdown2.markdown(post.content)
     }
 
-def get_all_posts():
+
+def get_all_posts(current_year=None, current_month=None):
+    if not current_year:
+        current_year = datetime.now().year
+    if not current_month:
+        current_month = datetime.now().month
+
     posts = []
-    for filename in os.listdir(app.config['POST_DIR']):
+    directory = str(app.config['POST_DIR']) + "/" + str(current_year) + "/" + str(current_month)
+    if not os.path.exists(directory):
+        return []
+    for filename in os.listdir(directory):
         if filename.endswith(".md"):
-            posts.append(parse_post(filename))
+            posts.append(parse_post(directory + "/" + filename))
     posts.sort(key=lambda p: p['datetime'], reverse=True)
     return posts
 
+
 @app.route("/")
 def index():
-    posts = get_all_posts()
+    now = datetime.now()
+    current_year = now.year
+    current_month = now.month
+    posts = get_all_posts(current_year, current_month)
+    previous = now.replace(day=1)
+    previous = previous - timedelta(days=1)
+    previous_year = previous.year
+    previous_month = previous.month
+    previous_posts = get_all_posts(previous_year, previous_month)
+    if len(previous_posts) > 0:
+        posts.append(previous_posts)
     return render_template("index.html", posts=posts[:MAX_RECENT])
+
 
 @app.route("/<int:year>/<int:month>")
 def archive(year, month):
-    posts = get_all_posts()
-    filtered = [p for p in posts if p["year"] == year and p["month"] == month]
-    if not filtered:
-        abort(404)
-    return render_template("archive.html", posts=filtered, year=year, month=month)
+    posts = get_all_posts(year, month)
+    return render_template("archive.html", posts=posts, year=year, month=month)
 
-@app.route("/<slug>")
-def post(slug):
-    filename = f"{slug}.md"
+
+@app.route("/<year>/<month>/<slug>")
+def post(year, month, slug):
+    filename = f"{year}/{month}/{slug}.md"
     path = os.path.join(app.config['POST_DIR'], filename)
     if not os.path.exists(path):
         abort(404)
     post = parse_post(filename)
     return render_template("post.html", post=post)
+
 
 @app.route("/archive")
 def archive_overview():
@@ -72,5 +98,6 @@ def archive_overview():
     sorted_groups = sorted(grouped.items(), reverse=True)
     return render_template("archive_overview.html", grouped=sorted_groups)
 
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    app.run(host="0.0.0.0", port=9000)
