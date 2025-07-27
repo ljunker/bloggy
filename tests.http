@@ -1,0 +1,8 @@
+POST https://blog.njord.ljunker.de/new-post
+Content-Type: application/json
+X-API-Key: your_api_key_here
+
+{
+  "title": "Test",
+  "content": "this is test content"
+}
