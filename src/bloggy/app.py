@@ -7,9 +7,13 @@ import frontmatter
 from datetime import datetime, timedelta
 from collections import defaultdict
 
+from flask.cli import load_dotenv
+
 app = Flask(__name__)
 POST_DIR = Path(__file__).parent / "posts"
 app.config['POST_DIR'] = POST_DIR
+load_dotenv()
+app.config['API_KEY'] = os.getenv('API_KEY')
 MAX_RECENT = 20
 
 
@@ -53,6 +57,20 @@ def get_all_posts(current_year=None, current_month=None):
             posts.append(parse_post(directory + "/" + filename))
     posts.sort(key=lambda p: p['datetime'], reverse=True)
     return posts
+
+
+def needs_api_key(func):
+    from functools import wraps
+    from flask import request, jsonify
+
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        api_key = request.headers.get('X-API-Key')
+        if api_key != app.config.get('API_KEY'):
+            return jsonify({"error": "Unauthorized"}), 401
+        return func(*args, **kwargs)
+
+    return decorated_function
 
 
 @app.route("/")
@@ -99,5 +117,30 @@ def archive_overview():
     return render_template("archive_overview.html", grouped=sorted_groups)
 
 
+@app.route("/new-post", methods=["POST"])
+@needs_api_key
+def new_post():
+    from flask import request, jsonify
+    data = request.get_json()
+    if not data or 'title' not in data or 'content' not in data:
+        return jsonify({"error": "Invalid input"}), 400
+
+    title = data['title']
+    content = data['content']
+    now = datetime.now()
+    filename = f"{now.year}/{now.month}/{now.strftime('%Y-%m-%d')}-{title.replace(' ', '-').lower()}.md"
+    path = os.path.join(app.config['POST_DIR'], filename)
+
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        date = now.strftime('%Y-%m-%d')
+        time = now.strftime('"%H:%M"')
+        f.write(
+            f"---\ntitle: {title}\ndate: {date}\ntime: {time}\n---\n\n{content}"
+        )
+
+    return jsonify({"message": "Post created", "slug": filename[:-3]}), 201
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=9000)
+    app.run(host="0.0.0.0", port=8000)
