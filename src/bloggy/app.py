@@ -134,7 +134,7 @@ def new_post():
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         f.write(
-            f"---\ntitle: {title}\ndate: {now.strftime('%Y-%m-%d')}\ntime: {now.strftime('"%H:%M"')}\n---\n\n{content}")
+            f"---\ntitle: {title}\ndate: {now.strftime('%Y-%m-%d')}\ntime: {now.strftime('\"%H:%M\"')}\n---\n\n{content}")
 
     return jsonify({"message": "Post created", "slug": filename[:-3]}), 201
 
