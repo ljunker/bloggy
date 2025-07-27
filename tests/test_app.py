@@ -46,3 +46,19 @@ def test_template_context(client, populated_blog, template_renderer):
     assert template.name == 'index.html'
     assert 'posts' in context
     assert len(context['posts']) > 0
+
+
+def test_new_post_creation(client, create_post):
+    new_post = {
+        "title": "New Post",
+        "content": "This is a new post."
+    }
+    headers = {
+        "X-API-Key": "test_api_key"
+    }
+    response = client.post('/new-post', json=new_post, headers=headers)
+    assert response.status_code == 201
+    response = client.get(response.json['slug'])
+    assert response.status_code == 200
+    content = response.get_data(as_text=True)
+    assert "This is a new post" in content
