@@ -12,7 +12,8 @@ def app():
     """Flask Anwendungs-Fixture."""
     flask_app.config.update({
         'TESTING': True,
-        'POST_DIR': None  # wird von temp_post_dir überschrieben
+        'POST_DIR': None,  # wird von temp_post_dir überschrieben
+        'API_KEY': 'test_api_key',  # Beispiel-API-Key für Tests
     })
     return flask_app
 
