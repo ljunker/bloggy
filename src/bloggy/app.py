@@ -10,7 +10,7 @@ from collections import defaultdict
 from flask.cli import load_dotenv
 
 app = Flask(__name__)
-POST_DIR = Path(__file__).parent / "posts"
+POST_DIR = os.getenv("POST_DIR")
 app.config['POST_DIR'] = POST_DIR
 load_dotenv()
 app.config['API_KEY'] = os.getenv('API_KEY')

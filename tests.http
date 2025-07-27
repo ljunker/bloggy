@@ -1,6 +1,6 @@
 POST https://blog.njord.ljunker.de/new-post
 Content-Type: application/json
-X-API-Key: your_api_key_here
+X-API-Key: v3kqv5k4bnvtj56jk4bj53G%v3V§V%t4q
 
 {
   "title": "Test",

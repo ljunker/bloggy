@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   blog:
     build: .
     ports:
       - "8456:8000"
     volumes:
-      - ./posts:/app/posts
+      - ./posts:/posts
       - ./templates:/app/templates:ro
     env_file:
       - .env
