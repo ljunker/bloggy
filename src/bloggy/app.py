@@ -66,8 +66,7 @@ def index():
     previous_year = previous.year
     previous_month = previous.month
     previous_posts = get_all_posts(previous_year, previous_month)
-    if len(previous_posts) > 0:
-        posts.append(previous_posts)
+    posts += previous_posts
     return render_template("index.html", posts=posts[:MAX_RECENT])
 
 
