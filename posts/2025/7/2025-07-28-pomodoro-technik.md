@@ -4,6 +4,8 @@ date: 2025-07-28
 time: "10:31"
 ---
 
+# Pomodoro-Technik
+
 ## Problemstellung
 Im Arbeitsalltag fällt es oft schwer, sich über längere Zeit auf eine Aufgabe zu konzentrieren. Ständige Ablenkungen, digitale Reize und das Gefühl, vor einem riesigen Berg an To-dos zu stehen, sorgen für Stress und Prokrastination.
 
