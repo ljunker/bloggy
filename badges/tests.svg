@@ -1,20 +1,20 @@
-<svg width="149.6" height="20" viewBox="0 0 1496 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="tests: total: 8, passed: 8">
-  <title>tests: total: 8, passed: 8</title>
-  <linearGradient id="WwJOP" x2="0" y2="100%">
+<svg width="149.6" height="20" viewBox="0 0 1496 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="tests: total: 9, passed: 9">
+  <title>tests: total: 9, passed: 9</title>
+  <linearGradient id="wMzJm" x2="0" y2="100%">
     <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
     <stop offset="1" stop-opacity=".1"/>
   </linearGradient>
-  <mask id="fOtuz"><rect width="1496" height="200" rx="30" fill="#FFF"/></mask>
-  <g mask="url(#fOtuz)">
+  <mask id="BouZR"><rect width="1496" height="200" rx="30" fill="#FFF"/></mask>
+  <g mask="url(#BouZR)">
     <rect width="366" height="200" fill="#555"/>
     <rect width="1130" height="200" fill="#999" x="366"/>
-    <rect width="1496" height="200" fill="url(#WwJOP)"/>
+    <rect width="1496" height="200" fill="url(#wMzJm)"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
     <text x="60" y="148" textLength="266" fill="#000" opacity="0.25">tests</text>
     <text x="50" y="138" textLength="266">tests</text>
-    <text x="421" y="148" textLength="1030" fill="#000" opacity="0.25">total: 8, passed: 8</text>
-    <text x="411" y="138" textLength="1030">total: 8, passed: 8</text>
+    <text x="421" y="148" textLength="1030" fill="#000" opacity="0.25">total: 9, passed: 9</text>
+    <text x="411" y="138" textLength="1030">total: 9, passed: 9</text>
   </g>
   
 </svg>
