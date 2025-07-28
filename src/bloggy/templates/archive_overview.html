@@ -11,11 +11,11 @@
     </nav>
 
     <div class="archive-grid">
-        {% for (year, month), posts in grouped %}
+        {% for location, posts in grouped %}
             <div class="archive-card">
-                <h3>{{ year }}/{{ "%02d" % month }}</h3>
-                <p>{{ posts|length }} Beiträge</p>
-                <a href="/{{ year }}/{{ '%02d' % month }}">Ansehen →</a>
+                <h3>{{ location }}</h3>
+                <p>{{ posts }} Beiträge</p>
+                <a href="/{{ location }}">Ansehen →</a>
             </div>
         {% endfor %}
     </div>
