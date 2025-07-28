@@ -1,3 +1,4 @@
+from html.parser import HTMLParser
 from pathlib import Path
 
 from flask import Flask, render_template, abort
@@ -6,6 +7,8 @@ import markdown2
 import frontmatter
 from datetime import datetime, timedelta
 from collections import defaultdict
+from feedgen.feed import FeedGenerator
+from flask import make_response
 
 from flask.cli import load_dotenv
 from pytz import timezone
@@ -17,6 +20,17 @@ load_dotenv()
 app.config['API_KEY'] = os.getenv('API_KEY')
 MAX_RECENT = 20
 berlin_tz = timezone('Europe/Berlin')
+
+class HTMLToTextParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.text = ""
+
+    def handle_data(self, data):
+        self.text += data
+
+    def get_text(self):
+        return self.text.strip()
 
 
 def parse_post(filename):
@@ -33,6 +47,11 @@ def parse_post(filename):
     date_str = post.get("date", "1970-01-01")
     time_str = post.get("time", "00:00")
     dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+    dt = berlin_tz.localize(dt)
+    html_content = markdown2.markdown(post.content)
+    parser = HTMLToTextParser()
+    parser.feed(html_content)
+    plaintext_content = parser.get_text()
 
     return {
         "slug": slug,
@@ -40,7 +59,8 @@ def parse_post(filename):
         "datetime": dt,
         "year": dt.year,
         "month": dt.month,
-        "content": markdown2.markdown(post.content)
+        "content": html_content,
+        "plaintext": plaintext_content
     }
 
 
@@ -77,7 +97,7 @@ def needs_api_key(func):
 
 @app.route("/")
 def index():
-    now = datetime.now()
+    now = datetime.now(berlin_tz)
     current_year = now.year
     current_month = now.month
     posts = get_all_posts(current_year, current_month)
@@ -141,6 +161,25 @@ def new_post():
         )
 
     return jsonify({"message": "Post created", "slug": filename[:-3]}), 201
+
+
+@app.route("/rss")
+def rss():
+    fg = FeedGenerator()
+    fg.title("Bloggy RSS Feed")
+    fg.description("Bloggy RSS Feed")
+    fg.link(href="https://blog.njord.ljunker.de")
+
+    for post in get_all_posts():
+        fe = fg.add_entry()
+        fe.title(post['title'])
+        fe.link(href=f"https://blog.njord.ljunker.de/{post['year']}/{post['month']}/{post['slug']}")
+        fe.description(post['plaintext'])
+        fe.pubDate(post['datetime'])
+
+    response = make_response(fg.rss_str())
+    response.headers.set('Content-Type', 'application/rss+xml')
+    return response
 
 
 if __name__ == "__main__":
