@@ -80,6 +80,24 @@ def get_all_posts(current_year=None, current_month=None):
     posts.sort(key=lambda p: p['datetime'], reverse=True)
     return posts
 
+def get_all_post_dirs():
+    post_dirs = defaultdict(int)
+    post_dir = Path(app.config['POST_DIR'])
+    for year_dir in os.listdir(post_dir):
+        year_path = post_dir / year_dir
+        if not year_path.is_dir():
+            continue
+        for month_dir in os.listdir(year_path):
+            month_path = year_path / month_dir
+            if not month_path.is_dir():
+                continue
+            post_count = len([f for f in month_path.iterdir() if f.is_file() and f.suffix == '.md'])
+            if post_count > 0:
+                post_dirs[f"{year_dir}/{month_dir}"] = post_count
+    sorted_post_dirs = sorted(post_dirs.items(), key=lambda x: (int(x[0].split('/')[0]), int(x[0].split('/')[1])), reverse=True)
+    return sorted_post_dirs
+
+
 
 def needs_api_key(func):
     from functools import wraps
@@ -128,14 +146,10 @@ def post(year, month, slug):
 
 @app.route("/archive")
 def archive_overview():
-    posts = get_all_posts()
-    grouped = defaultdict(list)
-    for post in posts:
-        grouped[(post["year"], post["month"])].append(post)
+    post_dirs_with_post_count = get_all_post_dirs()
 
     # Sortiert nach Jahr & Monat absteigend
-    sorted_groups = sorted(grouped.items(), reverse=True)
-    return render_template("archive_overview.html", grouped=sorted_groups)
+    return render_template("archive_overview.html", grouped=post_dirs_with_post_count)
 
 
 @app.route("/new-post", methods=["POST"])
