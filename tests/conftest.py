@@ -54,33 +54,36 @@ This is a test post content.
 @pytest.fixture
 def create_post(temp_post_dir):
     """
-    Factory-Fixture zum Erstellen von Test-Posts.
+    Factory-Fixture zum Erstellen von Test-Posts in der year/month-Struktur.
     """
     def _create_post(filename, content):
         path = os.path.join(temp_post_dir, filename)
+        directory = os.path.dirname(path)
+        os.makedirs(directory, exist_ok=True)  # Stelle sicher, dass das Zielverzeichnis existiert
         with open(path, 'w') as f:
             f.write(content)
         return path
     return _create_post
 
 
+
 @pytest.fixture
 def populated_blog(create_post, sample_post):
     """
-    Erstellt mehrere Test-Posts für Archiv- und Übersichtstests.
+    Erstellt mehrere Test-Posts in der neuen Ordnerstruktur (year/month).
     """
     posts = [
-        ('post-1.md', sample_post),
-        ('post-2.md', """---
+        ('2025/7/post-1.md', sample_post),
+        ('2025/7/post-2.md', """---
 title: Second Post
-date: 2025-02-01
+date: 2025-07-01
 time: "15:30"
 ---
 # Second Post
 Content of second post."""),
-        ('post-3.md', """---
+        ('2025/6/post-3.md', """---
 title: Third Post
-date: 2025-02-15
+date: 2025-06-15
 time: "09:00"
 ---
 # Third Post
@@ -89,7 +92,7 @@ Content of third post.""")
 
     created_posts = []
     for filename, content in posts:
-        path = create_post(filename, content)
+        path = create_post(filename, content)  # Ordnerstruktur year/month beachten
         created_posts.append(path)
 
     return created_posts

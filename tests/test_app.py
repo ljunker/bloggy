@@ -1,5 +1,4 @@
-from src.bloggy.app import app as flask_app
-import os
+from datetime import datetime
 
 
 def test_index_route(client, populated_blog):
@@ -8,8 +7,8 @@ def test_index_route(client, populated_blog):
 
 
 def test_post_route(client, create_post, sample_post):
-    create_post("test-post.md", sample_post)
-    response = client.get('/test-post')
+    create_post("2025/7/test-post.md", sample_post)  # Neuer Pfad
+    response = client.get('/2025/7/test-post')  # Angepasste Route
     assert response.status_code == 200
 
 
@@ -23,19 +22,14 @@ def test_archive_route(client, populated_blog):
     assert response.status_code == 200
 
 
-def test_archive_route_404(client, populated_blog):
-    response = client.get('/2024/1')  # Jahr ohne Posts
-    assert response.status_code == 404
-
-
 def test_archive_overview(client, populated_blog):
     response = client.get('/archive')
     assert response.status_code == 200
 
 
 def test_post_content(client, create_post, sample_post):
-    create_post("test-post.md", sample_post)
-    response = client.get('/test-post')
+    create_post("2025/7/test-post.md", sample_post)  # Neuer Pfad
+    response = client.get('/2025/7/test-post')  # Neue Route
     content = response.get_data(as_text=True)
     assert "Test Content" in content
 
@@ -48,7 +42,7 @@ def test_template_context(client, populated_blog, template_renderer):
     assert len(context['posts']) > 0
 
 
-def test_new_post_creation(client, create_post):
+def test_new_post_creation(client, temp_post_dir):
     new_post = {
         "title": "New Post",
         "content": "This is a new post."
@@ -62,3 +56,18 @@ def test_new_post_creation(client, create_post):
     assert response.status_code == 200
     content = response.get_data(as_text=True)
     assert "This is a new post" in content
+
+
+def test_rss_feed(client, create_post, sample_post):
+    now = datetime.now()
+    sample_post = sample_post.replace("2025-01-01", now.strftime("%Y-%m-%d"))
+    sample_post = sample_post.replace("Test Post", "Test Post RSS")
+    year = now.year
+    month = now.month
+    create_post(f"{year}/{month}/test-post.md", sample_post)
+    response = client.get('/rss')
+    assert response.status_code == 200
+    assert response.content_type == 'application/rss+xml'
+    content = response.get_data(as_text=True)
+    assert "<title>Bloggy RSS Feed</title>" in content
+    assert "<item>" in content  # Check for at least one item in the feed

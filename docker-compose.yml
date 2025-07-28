@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   blog:
     build: .
     ports:
       - "8456:8000"
     volumes:
-      - ./posts:/app/posts
+      - ./posts:/posts
       - ./templates:/app/templates:ro
-    environment:
-      - API_KEY=your_api_key_here
+    env_file:
+      - .env
     restart: unless-stopped
