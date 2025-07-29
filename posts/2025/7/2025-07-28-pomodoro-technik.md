@@ -13,7 +13,7 @@ Im Arbeitsalltag fällt es oft schwer, sich über längere Zeit auf eine Aufgabe
 * Pomodoro:
   * 25 Minuten fokussiertes Arbeiten
   * 5 Minuten Pause
-* Nach 4 Pomodors: 15-30 Minuten Pause
+* Nach 4 Pomodoros: 15-30 Minuten Pause
 * Timer nutzen (Küchenuhr, Apps, etc.)
 * Aufgaben in kleine Schritte unterteilen
 
@@ -21,7 +21,7 @@ Im Arbeitsalltag fällt es oft schwer, sich über längere Zeit auf eine Aufgabe
 * Strukturierter Arbeitsrhythmus
 * Fördert Fokus und Ausdauer
 * Regelmäßige Pausen für Erholung
-* Ideal für kleine To-Dos und Routingeaufgaben
+* Ideal für kleine To-dos und Routineaufgaben
 
 ## Nachteile
 * Starre Zeitblöcke können unflexibel wirken
